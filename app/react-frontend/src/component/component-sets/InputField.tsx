@@ -42,7 +42,7 @@ type SelectProps = {
     placeholder?: string,
     disabled?: string,
     type?: string,
-    value: number
+    value?: number
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   }
 
