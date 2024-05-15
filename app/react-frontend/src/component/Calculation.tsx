@@ -5,6 +5,7 @@ export const CalculationComponent = () => {
 
   const [payoutRadioButton, setPayoutRadioButton] = useState<string | null>(null)
   const [payoutPercOnTxn, setPayoutPercOnTxn] =useState<number>(0)
+  const [payoutPercOnPF, setPayoutPercOnPF] =useState<number>(0)
   const [pfType, setPfType] = useState<string | null>(null)
   const [pfAmount, setPfAmount] = useState<number>(0)
   const [extraGainToggle, setExtraGainToggle] = useState(false)
@@ -18,6 +19,11 @@ export const CalculationComponent = () => {
   const [deductionToggle, setDeductionToggle] = useState(false)
   const [autoCalculate, setAutoCalculate] = useState(false)
   const transactionAmount = 10000000
+  const [openTab, setOpenTab] = useState(1);
+  const [payoutAmount, setPayoutAmount] = useState<number>(0)
+  const [totalOtherGain, setTotalOtherGain] = useState<number>(0)
+  const [totalDeduction, setTotalDeduction] = useState<number>(0)
+  const [finalLenderPayout, setFinalLenderPayout] = useState<number>(0)
 
   const items: { value: string, label: string }[]= [
     { value: "PF", label: "PF" },
@@ -34,170 +40,9 @@ export const CalculationComponent = () => {
     { value: "Percent", label: "Percent" }
   ]
 
-const TransactionComponent = () => {
-  return <div>
-    <BasicInputField
-          header="Payout % on Transaction"
-          placeholder="% on Transaction amount"
-          type="number"
-          onChange={(e) => {
-            e.preventDefault()
-            setPayoutPercOnTxn(parseFloat(e.target.value));
-          }}
-        />
-  </div>
-}
-
-const PFComponent = () => {
-  return <div>
+return <div className="flex grid grid-cols-12">
+    <div className="flex-1 col-span-7 max-h-screen sticky top-0 overflow-y-auto">
     <div>
-    <BasicInputField
-          header="Payout % on PF"
-          placeholder="% on PF amount"
-          type="number"
-          value={payoutPercOnTxn}
-          onChange={(e) => {
-            setPayoutPercOnTxn(parseFloat(e.target.value));
-          }}
-        />
-      </div>
-      <div className="flex mt-4">
-      <div className="block text-sm font-medium text-gray-900 dark:text-white">
-        PF Type
-        </div>
-      <div className="ml-14 pt-0.5">
-        <RadioGroup 
-        name="PFType"
-        items={pfTypes}
-        value={pfType}
-        onChange={setPfType}/>
-      </div>
-      </div>
-      <div className="mt-4">
-      <BasicInputField
-          header={pfType === "Percent" ? ("PF Percent %") : "PF Amount (in Rs.)" }
-          placeholder={pfType === "Percent" ? ("... pf percent") : "... pf amount" }
-          type="number"
-          onChange={(e) => {
-            setPfAmount(parseFloat(e.target.value));
-          }}
-        />
-      </div>
-  </div>
-}
-
-const InsuranceComponentFlat = () => {
-  return <div className="mt-4 w-5/12">
-    <BasicInputField
-        header="Insurance Amount"
-        placeholder="Insurance amount provided"
-        type="number"
-        onChange={(e) => {
-          setFlatInsuranceAmount(parseFloat(e.target.value));
-        }}
-      />
-  </div>
-}
-
-const InsuranceComponentPercent = () => {
-  return <div className="mt-4">
-    <div className="flex">
-    <div className="w-5/12">
-      <BasicInputField
-          header="Insurance Amount"
-          placeholder="Insurance amount provided"
-          type="number"
-          onChange={(e) => {
-            setPercInsuranceAmount(parseFloat(e.target.value));
-          }}
-        />
-    </div>
-    <div className="ml-6 w-5/12">
-      <BasicInputField
-          header="Insurance Payout %"
-          placeholder="Insurance % of the amount"
-          type="number"
-          onChange={(e) => {
-            setPercInsurancePercentage(parseFloat(e.target.value));
-          }}
-        />
-    </div>
-    </div>
-    <div className="mt-4 w-5/12">
-    <DisabledInputField
-        header="Final Insurance Amount"
-        placeholder="Total insurance gained"
-        type="number"
-      />
-    </div>
-  </div>
-}
-
-const ExtraGainComponent = () => {
-  return <div className="pl-4 mt-4">
-    <div className="block text-sm font-medium text-gray-900 dark:text-white">
-      Insurance Type
-    </div>
-  <div className="flex pt-2">
-    <RadioGroup 
-        name="InsuranceType"
-        items={insuranceTypes}
-        value={insuranceType}
-        onChange={setInsuranceType}/>
-  </div>
-  <div>
-    {insuranceType === "Flat" ? (
-      <InsuranceComponentFlat />
-    ) : insuranceType === "Percent" ? (
-      <InsuranceComponentPercent />
-    ) : null}
-  </div>
-  <div className="flex mt-6">
-  <div className="w-5/12">
-    <BasicInputField
-        header="Extra Earning PF %"
-        placeholder="% of extra earned PF"
-        type="number"
-        onChange={(e) => {
-          setExtraEarningPFPerc(parseFloat(e.target.value));
-        }}
-      />
-  </div>
-  <div className="ml-6 w-5/12">
-    <BasicInputField
-        header="Saarathi Share(Ext Earning PF)"
-        placeholder="saarathi's share percentage"
-        type="number"
-        onChange={(e) => {
-          setSaarathiShare(parseFloat(e.target.value));
-        }}
-      />
-  </div>
-  </div>
-  <div className="flex mt-4">
-  <div className="w-5/12">
-    <BasicInputField
-        header="Adjustment(gain)"
-        placeholder="any extra amount from lender?"
-        type="number"
-        onChange={(e) => {
-          setAdjustmentGain(parseFloat(e.target.value));
-        }}
-      />
-  </div>
-  <div className="ml-6 w-5/12">
-    <DisabledInputField
-        header="Payout on Extra Earning PF %"
-        placeholder="any extra amount from lender?"
-        type="number"
-      />
-  </div>
-  </div>
-  </div>
-}
-
-const CalculationComponent = () => {
-  return <div>
   <div className="m-5 mt-12">
     <div id="accordion-flush" data-accordion="open" data-active-className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white" data-inactive-classNamees="text-gray-500 dark:text-gray-400">
       <h2 id="accordion-flush-heading-1">
@@ -226,9 +71,55 @@ const CalculationComponent = () => {
         </div>
         <div className="ml-12 w-5/12">
       {payoutRadioButton === "Transaction" ? (
-        <TransactionComponent />
+        <div>
+        <BasicInputField
+              header="Payout % on Transaction"
+              placeholder="% on Transaction amount"
+              type="number"
+              key="random1"
+              value={payoutPercOnTxn}
+              onChange={(e) => {
+                setPayoutPercOnTxn(parseFloat(e.target.value));
+                setPayoutAmount(payoutPercOnTxn)
+              }}
+            />
+      </div>
       ) : payoutRadioButton === "PF" ? (
-        <PFComponent />
+        <div>
+    <div>
+    <BasicInputField
+          header="Payout % on PF"
+          placeholder="% on PF amount"
+          type="number"
+          value={payoutPercOnPF}
+          onChange={(e) => {
+            setPayoutPercOnPF(parseFloat(e.target.value));
+          }}
+        />
+      </div>
+      <div className="flex mt-4">
+      <div className="block text-sm font-medium text-gray-900 dark:text-white">
+        PF Type
+        </div>
+      <div className="ml-14 pt-0.5">
+        <RadioGroup 
+        name="PFType"
+        items={pfTypes}
+        value={pfType}
+        onChange={setPfType}/>
+      </div>
+      </div>
+      <div className="mt-4">
+      <BasicInputField
+          header={pfType === "Percent" ? ("PF Percent %") : "PF Amount (in Rs.)" }
+          placeholder={pfType === "Percent" ? ("... pf percent") : "... pf amount" }
+          type="number"
+          onChange={(e) => {
+            setPfAmount(parseFloat(e.target.value));
+          }}
+        />
+      </div>
+  </div>
       ) : null}
     </div>
     </div>
@@ -237,7 +128,109 @@ const CalculationComponent = () => {
       <ToggleField header="Extra Gains from Lender?" checked={extraGainToggle} onChange={() => setExtraGainToggle(!extraGainToggle)}/>
       {/* <CheckBoxField header="Extra Gains from Lender?" onChange={() => setExtraGainToggle(!extraGainToggle)}/> */}
     <div>
-      {extraGainToggle === true ? (<ExtraGainComponent />) : null}
+      {extraGainToggle === true ? (
+        <div className="pl-4 mt-4">
+        <div className="block text-sm font-medium text-gray-900 dark:text-white">
+          Insurance Type
+        </div>
+      <div className="flex pt-2">
+        <RadioGroup 
+            name="InsuranceType"
+            items={insuranceTypes}
+            value={insuranceType}
+            onChange={setInsuranceType}/>
+      </div>
+      <div>
+        {insuranceType === "Flat" ? (
+          <div className="mt-4 w-5/12">
+          <BasicInputField
+              header="Insurance Amount"
+              placeholder="Insurance amount provided"
+              type="number"
+              onChange={(e) => {
+                setFlatInsuranceAmount(parseFloat(e.target.value));
+              }}
+            />
+        </div>
+        ) : insuranceType === "Percent" ? (
+          <div className="mt-4">
+        <div className="flex">
+        <div className="w-5/12">
+          <BasicInputField
+              header="Insurance Amount"
+              placeholder="Insurance amount provided"
+              type="number"
+              onChange={(e) => {
+                setPercInsuranceAmount(parseFloat(e.target.value));
+              }}
+            />
+        </div>
+        <div className="ml-6 w-5/12">
+          <BasicInputField
+              header="Insurance Payout %"
+              placeholder="Insurance % of the amount"
+              type="number"
+              onChange={(e) => {
+                setPercInsurancePercentage(parseFloat(e.target.value));
+              }}
+            />
+        </div>
+        </div>
+        <div className="mt-4 w-5/12">
+        <DisabledInputField
+            header="Final Insurance Amount"
+            placeholder="Total insurance gained"
+            type="number"
+            value={flatInsuranceAmount}
+          />
+        </div>
+      </div>
+        ) : null}
+      </div>
+      <div className="flex mt-6">
+      <div className="w-5/12">
+        <BasicInputField
+            header="Extra Earning PF %"
+            placeholder="% of extra earned PF"
+            type="number"
+            onChange={(e) => {
+              setExtraEarningPFPerc(parseFloat(e.target.value));
+            }}
+          />
+      </div>
+      <div className="ml-6 w-5/12">
+        <BasicInputField
+            header="Saarathi Share(Ext Earning PF)"
+            placeholder="saarathi's share percentage"
+            type="number"
+            onChange={(e) => {
+              setSaarathiShare(parseFloat(e.target.value));
+            }}
+          />
+      </div>
+      </div>
+      <div className="flex mt-4">
+      <div className="w-5/12">
+        <BasicInputField
+            header="Adjustment(gain)"
+            placeholder="any extra amount from lender?"
+            type="number"
+            onChange={(e) => {
+              setAdjustmentGain(parseFloat(e.target.value));
+            }}
+          />
+      </div>
+      <div className="ml-6 w-5/12">
+        <DisabledInputField
+            header="Payout on Extra Earning PF %"
+            placeholder="any extra amount from lender?"
+            type="number"
+            value={extraEarningPFPerc}
+          />
+      </div>
+      </div>
+      </div>
+      ) : null}
     </div>
     </div>
     <div className="mt-10 ml-4 p-4 border border-gray-200 rounded dark:border-gray-700 w-full">
@@ -245,6 +238,7 @@ const CalculationComponent = () => {
     </div>
     <div className="ml-4 mt-8 p-4 border border-gray-200 rounded dark:border-gray-700 w-full">
       <div className="block mb-2 text-md font-medium text-gray-900 dark:text-white">
+        {/* FINAL BLOCK */}
         Final Lender Payout
       </div>
       <div className="flex mt-6">
@@ -253,6 +247,7 @@ const CalculationComponent = () => {
         header="Payout Amount"
         placeholder=""
         type="number"
+        value={payoutAmount}
       />
     </div>
     <div className="ml-6 w-5/12">
@@ -260,6 +255,7 @@ const CalculationComponent = () => {
         header="Total Other Gain"
         placeholder=""
         type="number"
+        value={totalOtherGain}
       />
     </div>
     </div>
@@ -269,6 +265,7 @@ const CalculationComponent = () => {
         header="Total Deduction"
         placeholder=""
         type="number"
+        value={totalDeduction}
       />
     </div>
     <div className="ml-6 w-5/12">
@@ -276,6 +273,7 @@ const CalculationComponent = () => {
         header="Final Lender Payout"
         placeholder=""
         type="number"
+        value={finalLenderPayout}
       />
     </div>
     </div>
@@ -327,17 +325,9 @@ const CalculationComponent = () => {
       <ButtonType header="Save Calculation" onClick={() => ("")}/>
     </div>
     </div>
-}
-
-type ColorProps = {
-  color: string
-}
-
-const ViewDataTabs = ({ color }:ColorProps) => {
-  const [openTab, setOpenTab] = useState(1);
-  return (
-    <>
-      <div className="flex flex-wrap mt-8">
+  </div>
+  <div className="flex-1 col-span-5 max-h-screen sticky top-0 overflow-y-auto">
+  <div className="flex flex-wrap mt-8">
         <div className="w-full">
           <ul
             className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row"
@@ -348,8 +338,8 @@ const ViewDataTabs = ({ color }:ColorProps) => {
                 className={
                   "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
                   (openTab === 1
-                    ? "text-white bg-" + color + "-600"
-                    : "text-" + color + "-600 bg-white")
+                    ? "text-white bg-blue-600"
+                    : "text-blue-600 bg-white")
                 }
                 onClick={e => {
                   e.preventDefault();
@@ -367,8 +357,8 @@ const ViewDataTabs = ({ color }:ColorProps) => {
                 className={
                   "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
                   (openTab === 2
-                    ? "text-white bg-" + color + "-600"
-                    : "text-" + color + "-600 bg-white")
+                    ? "text-white bg-blue-600"
+                    : "text-blue-600 bg-white")
                 }
                 onClick={e => {
                   e.preventDefault();
@@ -386,8 +376,8 @@ const ViewDataTabs = ({ color }:ColorProps) => {
                 className={
                   "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
                   (openTab === 3
-                    ? "text-white bg-" + color + "-600"
-                    : "text-" + color + "-600 bg-white")
+                    ? "text-white bg-blue-600"
+                    : "text-blue-600 bg-white")
                 }
                 onClick={e => {
                   e.preventDefault();
@@ -466,16 +456,6 @@ const ViewDataTabs = ({ color }:ColorProps) => {
           </div>
         </div>
       </div>
-    </>
-  )
-}
-
-return <div className="flex grid grid-cols-12">
-    <div className="flex-1 col-span-7 max-h-screen sticky top-0 overflow-y-auto">
-      <CalculationComponent />
-  </div>
-  <div className="flex-1 col-span-5 max-h-screen sticky top-0 overflow-y-auto">
-    <ViewDataTabs color="blue"/>
   </div>
 </div>
 }

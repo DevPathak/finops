@@ -33,7 +33,8 @@ type SelectProps = {
     disabled?: string,
     type: string,
     value?: number,
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void
+    key?: string,
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   }
 
   type DisabledInputFieldProps = {
@@ -41,6 +42,7 @@ type SelectProps = {
     placeholder?: string,
     disabled?: string,
     type?: string,
+    value: number
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   }
 
@@ -169,20 +171,20 @@ export function SelectInputField1({ header, value, disabled, className, options,
     
 }
 
-export function BasicInputField({ header, placeholder, type, value, onChange }: BasicInputFieldProps) {
+export function BasicInputField({ header, placeholder, type, value, key, onChange }: BasicInputFieldProps) {
     return <div>
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{header}</label>
-        <input type= {type} onChange={onChange} value={value} id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
+        <input type= {type} onChange={onChange} value={value} key={key} id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
             rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700
             dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 
-            dark:focus:border-blue-500" placeholder={placeholder}/>
+            dark:focus:border-blue-500" placeholder={placeholder} required step="any"/>
     </div>
 }
 
-export function DisabledInputField({ header, placeholder, type }: DisabledInputFieldProps) {
+export function DisabledInputField({ header, placeholder, value, type }: DisabledInputFieldProps) {
     return <div>
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{header}</label>
-        <input type= {type || "text"} id="first_name" value={"0"} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
+        <input type= {type || "text"} id="first_name" value={value} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
             rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 bg-slate-200
             dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 
             dark:focus:border-blue-500" placeholder={placeholder} required disabled/>
