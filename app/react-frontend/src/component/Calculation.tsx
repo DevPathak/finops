@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react"
+import { useState } from "react"
 import { BasicInputField, ButtonType, CheckBoxField, DisabledInputField, RadioGroup, ToggleField } from "./component-sets/InputField"
 
 export const CalculationComponent = () => {
@@ -7,23 +7,27 @@ export const CalculationComponent = () => {
   const [payoutPercOnTxn, setPayoutPercOnTxn] =useState<number>(0)
   const [payoutPercOnPF, setPayoutPercOnPF] =useState<number>(0)
   const [pfType, setPfType] = useState<string | null>(null)
-  const [pfAmount, setPfAmount] = useState<number>(0)
+  const [pfValue, setPfValue] = useState<number>(0)
   const [extraGainToggle, setExtraGainToggle] = useState(false)
   const [insuranceType, setInsuranceType] = useState<string | null>(null)
   const [extraEarningPFPerc, setExtraEarningPFPerc] = useState<number>(0)
   const [saarathiShare, setSaarathiShare] = useState<number>(0)
   const [adjustmentGain, setAdjustmentGain] = useState<number>(0)
+  const [payoutOnExtraEarningPF, setPayoutOnExtraEarningPF] = useState<number>(0)
   const [flatInsuranceAmount, setFlatInsuranceAmount] = useState<number>(0)
   const [percInsuranceAmount, setPercInsuranceAmount] = useState<number>(0)
   const [percInsuracePercentage, setPercInsurancePercentage] = useState<number>(0)
+  const [finalInsuranceAmount, setFinalInsuranceAmount] = useState<number>(0)
   const [deductionToggle, setDeductionToggle] = useState(false)
   const [autoCalculate, setAutoCalculate] = useState(false)
-  const transactionAmount = 10000000
+  const [cpPayoutPerc, setCpPayoutPerc] = useState<number>(90)
+  const [cpNetPayoutAmount, setCpNetPayoutAmount] = useState<number>(0)
   const [openTab, setOpenTab] = useState(1);
   const [payoutAmount, setPayoutAmount] = useState<number>(0)
   const [totalOtherGain, setTotalOtherGain] = useState<number>(0)
   const [totalDeduction, setTotalDeduction] = useState<number>(0)
   const [finalLenderPayout, setFinalLenderPayout] = useState<number>(0)
+  const transactionAmount = 1000000
 
   const items: { value: string, label: string }[]= [
     { value: "PF", label: "PF" },
@@ -80,23 +84,14 @@ return <div className="flex grid grid-cols-12">
               value={payoutPercOnTxn}
               onChange={(e) => {
                 setPayoutPercOnTxn(parseFloat(e.target.value));
-                setPayoutAmount(payoutPercOnTxn)
+                setPayoutAmount(parseFloat(e.target.value) * transactionAmount/100)
+                setFinalLenderPayout((parseFloat(e.target.value) * transactionAmount/100) + totalOtherGain - totalDeduction)
+                setCpNetPayoutAmount(autoCalculate ? ((parseFloat(e.target.value) * transactionAmount/100) + totalOtherGain - totalDeduction) * cpPayoutPerc/100 : 0)
               }}
             />
       </div>
       ) : payoutRadioButton === "PF" ? (
         <div>
-    <div>
-    <BasicInputField
-          header="Payout % on PF"
-          placeholder="% on PF amount"
-          type="number"
-          value={payoutPercOnPF}
-          onChange={(e) => {
-            setPayoutPercOnPF(parseFloat(e.target.value));
-          }}
-        />
-      </div>
       <div className="flex mt-4">
       <div className="block text-sm font-medium text-gray-900 dark:text-white">
         PF Type
@@ -110,14 +105,68 @@ return <div className="flex grid grid-cols-12">
       </div>
       </div>
       <div className="mt-4">
+        {pfType === "Percent" ? (
+          <div>
+            <div>
       <BasicInputField
-          header={pfType === "Percent" ? ("PF Percent %") : "PF Amount (in Rs.)" }
-          placeholder={pfType === "Percent" ? ("... pf percent") : "... pf amount" }
+          header="PF Percent %"
+          placeholder="... pf percent"
           type="number"
           onChange={(e) => {
-            setPfAmount(parseFloat(e.target.value));
+            setPfValue(parseFloat(e.target.value))
+            setPayoutAmount((parseFloat(e.target.value)*transactionAmount/100)/100 * payoutPercOnPF)
+            setFinalLenderPayout(((parseFloat(e.target.value)*transactionAmount/100)/100 * payoutPercOnPF) + totalOtherGain - totalDeduction)
+            setCpNetPayoutAmount(autoCalculate ? (((parseFloat(e.target.value)*transactionAmount/100)/100 * payoutPercOnPF) + totalOtherGain - totalDeduction) * cpPayoutPerc/100 : 0)
           }}
         />
+        </div>
+        <div className="mt-4">
+        <BasicInputField
+          header="Payout % on PF"
+          placeholder="% on PF amount"
+          type="number"
+          value={payoutPercOnPF}
+          onChange={(e) => {
+            setPayoutPercOnPF(parseFloat(e.target.value))
+            setPayoutAmount(parseFloat(e.target.value)*(pfValue*transactionAmount/100)/100)
+            setFinalLenderPayout((parseFloat(e.target.value)*(pfValue*transactionAmount/100)/100) + totalOtherGain - totalDeduction)
+            setCpNetPayoutAmount(autoCalculate ? ((parseFloat(e.target.value)*(pfValue*transactionAmount/100)/100) + totalOtherGain - totalDeduction) * cpPayoutPerc/100 : 0)
+          }}
+        />
+          </div>
+        </div>
+        ) : pfType === "Flat" ? (
+          <div>
+            <div>
+          <BasicInputField
+          header="PF Amount (in Rs.)"
+          placeholder="... pf amount"
+          type="number"
+          onChange={(e) => {
+            setPfValue(parseFloat(e.target.value))
+            setPayoutAmount(parseFloat(e.target.value)/100 * payoutPercOnPF)
+            setFinalLenderPayout((parseFloat(e.target.value)/100 * payoutPercOnPF) + totalOtherGain - totalDeduction)
+            setCpNetPayoutAmount(autoCalculate ? ((parseFloat(e.target.value)/100 * payoutPercOnPF) + totalOtherGain - totalDeduction) * cpPayoutPerc/100 : 0)
+          }}
+        />
+        </div>
+        <div className="mt-4">
+        <BasicInputField
+          header="Payout % on PF"
+          placeholder="% on PF amount"
+          type="number"
+          value={payoutPercOnPF}
+          onChange={(e) => {
+            setPayoutPercOnPF(parseFloat(e.target.value))
+            setPayoutAmount(parseFloat(e.target.value)*pfValue/100)
+            setFinalLenderPayout((parseFloat(e.target.value)*pfValue/100) + totalOtherGain - totalDeduction)
+            setCpNetPayoutAmount(autoCalculate ? ((parseFloat(e.target.value)*pfValue/100) + totalOtherGain - totalDeduction) * cpPayoutPerc/100 : 0)
+          }}
+        />
+          </div>
+          </div>
+        ) : null
+}
       </div>
   </div>
       ) : null}
@@ -125,7 +174,16 @@ return <div className="flex grid grid-cols-12">
     </div>
     {/* Extra Gain Toggle */}
     <div className="mt-10 ml-4 p-4 border border-gray-200 rounded dark:border-gray-700 w-full">
-      <ToggleField header="Extra Gains from Lender?" checked={extraGainToggle} onChange={() => setExtraGainToggle(!extraGainToggle)}/>
+      <ToggleField 
+        header="Extra Gains from Lender?" 
+        checked={extraGainToggle} 
+        onChange={() => {
+          setExtraGainToggle(!extraGainToggle)
+          setTotalOtherGain(extraGainToggle ? 0 : (insuranceType === "Percent" ? finalInsuranceAmount : flatInsuranceAmount) + payoutOnExtraEarningPF + adjustmentGain)
+          setFinalLenderPayout(extraGainToggle ? payoutAmount - totalDeduction : payoutAmount + ((insuranceType === "Percent" ? finalInsuranceAmount : flatInsuranceAmount) + payoutOnExtraEarningPF + adjustmentGain) - totalDeduction)
+          setCpNetPayoutAmount(autoCalculate ? (extraGainToggle ? payoutAmount - totalDeduction : payoutAmount + ((insuranceType === "Percent" ? finalInsuranceAmount : flatInsuranceAmount) + payoutOnExtraEarningPF + adjustmentGain) - totalDeduction) * cpPayoutPerc/100 : 0)
+        }
+          }/>
       {/* <CheckBoxField header="Extra Gains from Lender?" onChange={() => setExtraGainToggle(!extraGainToggle)}/> */}
     <div>
       {extraGainToggle === true ? (
@@ -149,6 +207,9 @@ return <div className="flex grid grid-cols-12">
               type="number"
               onChange={(e) => {
                 setFlatInsuranceAmount(parseFloat(e.target.value));
+                setTotalOtherGain(parseFloat(e.target.value) + adjustmentGain + extraEarningPFPerc)
+                setFinalLenderPayout(parseFloat(e.target.value) + adjustmentGain + extraEarningPFPerc + payoutAmount - totalDeduction)
+                setCpNetPayoutAmount(autoCalculate ? (parseFloat(e.target.value) + adjustmentGain + extraEarningPFPerc + payoutAmount - totalDeduction) * cpPayoutPerc/100 : 0)
               }}
             />
         </div>
@@ -162,6 +223,10 @@ return <div className="flex grid grid-cols-12">
               type="number"
               onChange={(e) => {
                 setPercInsuranceAmount(parseFloat(e.target.value));
+                setFinalInsuranceAmount(parseFloat(e.target.value)/100 * percInsuracePercentage)
+                setTotalOtherGain((parseFloat(e.target.value)/100 * percInsuracePercentage) + adjustmentGain + payoutOnExtraEarningPF)
+                setFinalLenderPayout(parseFloat(e.target.value)/100 * percInsuracePercentage + payoutAmount - totalDeduction)
+                setCpNetPayoutAmount(autoCalculate ? (parseFloat(e.target.value)/100 * percInsuracePercentage + payoutAmount - totalDeduction) * cpPayoutPerc/100 : 0)
               }}
             />
         </div>
@@ -172,6 +237,10 @@ return <div className="flex grid grid-cols-12">
               type="number"
               onChange={(e) => {
                 setPercInsurancePercentage(parseFloat(e.target.value));
+                setFinalInsuranceAmount(parseFloat(e.target.value) * percInsuranceAmount/100)
+                setTotalOtherGain((parseFloat(e.target.value) * percInsuranceAmount/100) + adjustmentGain + payoutOnExtraEarningPF)
+                setFinalLenderPayout(parseFloat(e.target.value) * percInsuranceAmount/100 + payoutAmount - totalDeduction)
+                setCpNetPayoutAmount(autoCalculate ? (parseFloat(e.target.value) * percInsuranceAmount/100 + payoutAmount - totalDeduction) * cpPayoutPerc/100 : 0)
               }}
             />
         </div>
@@ -181,7 +250,7 @@ return <div className="flex grid grid-cols-12">
             header="Final Insurance Amount"
             placeholder="Total insurance gained"
             type="number"
-            value={flatInsuranceAmount}
+            value={finalInsuranceAmount}
           />
         </div>
       </div>
@@ -195,6 +264,10 @@ return <div className="flex grid grid-cols-12">
             type="number"
             onChange={(e) => {
               setExtraEarningPFPerc(parseFloat(e.target.value));
+              setPayoutOnExtraEarningPF((parseFloat(e.target.value)/100 * transactionAmount) * saarathiShare/100)
+              setTotalOtherGain(insuranceType === "Percent" ? ((parseFloat(e.target.value)/100 * transactionAmount) * saarathiShare/100) + adjustmentGain + finalInsuranceAmount : ((parseFloat(e.target.value)/100 * transactionAmount) * saarathiShare/100) + adjustmentGain + flatInsuranceAmount)
+              setFinalLenderPayout((insuranceType === "Percent" ? ((parseFloat(e.target.value)/100 * transactionAmount) * saarathiShare/100) + adjustmentGain + finalInsuranceAmount + payoutAmount - totalDeduction : ((parseFloat(e.target.value)/100 * transactionAmount) * saarathiShare/100) + adjustmentGain + flatInsuranceAmount) + payoutAmount - totalDeduction)
+              setCpNetPayoutAmount(autoCalculate ? ((insuranceType === "Percent" ? ((parseFloat(e.target.value)/100 * transactionAmount) * saarathiShare/100) + adjustmentGain + finalInsuranceAmount + payoutAmount - totalDeduction : ((parseFloat(e.target.value)/100 * transactionAmount) * saarathiShare/100) + adjustmentGain + flatInsuranceAmount) + payoutAmount - totalDeduction) * cpPayoutPerc/100 : 0)
             }}
           />
       </div>
@@ -205,6 +278,10 @@ return <div className="flex grid grid-cols-12">
             type="number"
             onChange={(e) => {
               setSaarathiShare(parseFloat(e.target.value));
+              setPayoutOnExtraEarningPF(parseFloat(e.target.value)/100 * (extraEarningPFPerc/100*transactionAmount))
+              setTotalOtherGain(insuranceType === "Percent" ? (parseFloat(e.target.value)/100 * (extraEarningPFPerc/100*transactionAmount)) + adjustmentGain + finalInsuranceAmount : (parseFloat(e.target.value)/100 * (extraEarningPFPerc/100*transactionAmount)) + adjustmentGain + flatInsuranceAmount)
+              setFinalLenderPayout(insuranceType === "Percent" ? (parseFloat(e.target.value)/100 * (extraEarningPFPerc/100*transactionAmount)) + adjustmentGain + finalInsuranceAmount + payoutAmount - totalDeduction : (parseFloat(e.target.value)/100 * (extraEarningPFPerc/100*transactionAmount)) + adjustmentGain + flatInsuranceAmount + payoutAmount - totalDeduction)
+              setCpNetPayoutAmount(autoCalculate ? (insuranceType === "Percent" ? (parseFloat(e.target.value)/100 * (extraEarningPFPerc/100*transactionAmount)) + adjustmentGain + finalInsuranceAmount + payoutAmount - totalDeduction : (parseFloat(e.target.value)/100 * (extraEarningPFPerc/100*transactionAmount)) + adjustmentGain + flatInsuranceAmount + payoutAmount - totalDeduction) * cpPayoutPerc/100 : 0)
             }}
           />
       </div>
@@ -217,6 +294,9 @@ return <div className="flex grid grid-cols-12">
             type="number"
             onChange={(e) => {
               setAdjustmentGain(parseFloat(e.target.value));
+              setTotalOtherGain(insuranceType === "Percent" ? parseFloat(e.target.value) + payoutOnExtraEarningPF + finalInsuranceAmount : parseFloat(e.target.value) + payoutOnExtraEarningPF + flatInsuranceAmount)
+              setFinalLenderPayout(insuranceType === "Percent" ? parseFloat(e.target.value) + payoutOnExtraEarningPF + finalInsuranceAmount + payoutAmount - totalDeduction : parseFloat(e.target.value) + payoutOnExtraEarningPF + flatInsuranceAmount + payoutAmount - totalDeduction)
+              setCpNetPayoutAmount(autoCalculate ? (insuranceType === "Percent" ? parseFloat(e.target.value) + payoutOnExtraEarningPF + finalInsuranceAmount + payoutAmount - totalDeduction : parseFloat(e.target.value) + payoutOnExtraEarningPF + flatInsuranceAmount + payoutAmount - totalDeduction) * cpPayoutPerc/100 : 0)
             }}
           />
       </div>
@@ -225,7 +305,7 @@ return <div className="flex grid grid-cols-12">
             header="Payout on Extra Earning PF %"
             placeholder="any extra amount from lender?"
             type="number"
-            value={extraEarningPFPerc}
+            value={payoutOnExtraEarningPF}
           />
       </div>
       </div>
@@ -296,7 +376,10 @@ return <div className="flex grid grid-cols-12">
         {/* {Accordian Open} */}
         <div className="mt-8 ml-4">
           <div className="w-5/12">
-            <CheckBoxField header="Auto Calculate Payout?" onChange={() => setAutoCalculate(!autoCalculate)}/>
+            <CheckBoxField header="Auto Calculate Payout?" onChange={() => {
+              setAutoCalculate(!autoCalculate)
+              setCpNetPayoutAmount(!autoCalculate ? finalLenderPayout * cpPayoutPerc/100 : 0)
+              }}/>
           </div>
           <div className="flex mt-6">
           <div className="w-5/12">
@@ -304,6 +387,7 @@ return <div className="flex grid grid-cols-12">
             header="CP Payout %"
             placeholder="channel's contract %"
             type="number"
+            value={cpPayoutPerc}
             />
           </div>
           <div className="ml-6 w-5/12">
@@ -311,8 +395,9 @@ return <div className="flex grid grid-cols-12">
               header="Net Payout Amount"
               placeholder="final cp payout"
               type="number"
+              value={cpNetPayoutAmount}
               onChange={(e) => {
-                setPercInsuranceAmount(parseFloat(e.target.value));
+                setCpNetPayoutAmount(parseFloat(e.target.value));
               }}
             />
           </div>
