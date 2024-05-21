@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { BACKEND_URL } from "../config"
 import { InputSigninObject } from "finops-common"
-import { LabelledInput, PasswordInput } from "./component-sets/InputField"
-import { Button } from "./Button"
+import { ButtonType, LabelledInput, PasswordInput } from "./component-sets/InputField"
 
 export const Auth = () => {
     const navigate = useNavigate()
@@ -16,10 +15,10 @@ export const Auth = () => {
 
     async function sendRequest() {
         try {
-            const response = await axios.post(`${BACKEND_URL}/api/v1/user`, postInputs)
-            const { jwt } = response.data
+            const response = await axios.post(`${BACKEND_URL}/login`, postInputs)
+            const { jwt } = await response.data
             localStorage.setItem("token", jwt)
-            navigate("/blog")
+            navigate("/dashboard")
         } catch(e){
             alert("Error while signing up")
             console.log(e)
@@ -28,9 +27,9 @@ export const Auth = () => {
 
     return <div className="h-screen flex justify-center flex-col">
         {/* {JSON.stringify(postInputs)} */}
-        <div className="flex justify-center text-left">
+        <div className="flex justify-center">
             <div>
-                <div className="px-8">
+                <div className="pr-8">
                     <div className="text-3xl font-semibold">
                         Welcome back!
                     </div>
@@ -39,19 +38,25 @@ export const Auth = () => {
                     </div>
                 </div>
                 <div className="pt-12">
+                    <div>
                     <LabelledInput placeholder="you@saarathi.ai" onchange={(e) => {
                         setPostInputs(c => ({
                             ...c,
                             username: e.target.value
                         }))
                     }} />
+                    </div>
+                    <div className="my-6">
                     <PasswordInput placeholder="At least 6 characters" onchange={(e) => {
                         setPostInputs(c => ({
                             ...c,
                             password: e.target.value
                         }))
                     }}/>
-                    <Button label="Login" onclick={sendRequest}/>
+                    </div>
+                    <div className="">
+                    <ButtonType header="Login" onClick={sendRequest}/>
+                    </div>
                 </div>
             </div>
         </div>

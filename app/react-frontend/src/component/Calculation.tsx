@@ -41,11 +41,11 @@ export const CalculationComponent = () => {
 
   const insuranceTypes: { value: string, label: string }[] = [
     { value: "Flat", label: "Flat" },
-    { value: "Percent", label: "Percent" }
+    { value: "Percent", label: "Percent"}
   ]
 
-return <div className="flex grid grid-cols-12">
-    <div className="flex-1 col-span-7 max-h-screen sticky top-0 overflow-y-auto">
+return <div className="flex grid grid-cols-12 divide-x-2">
+    <div className="flex-1 col-span-8 max-h-screen sticky top-0 overflow-y-auto no-scrollbar mr-2">
     <div>
   <div className="m-5 mt-12">
     <div id="accordion-flush" data-accordion="open" data-active-className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white" data-inactive-classNamees="text-gray-500 dark:text-gray-400">
@@ -59,7 +59,7 @@ return <div className="flex grid grid-cols-12">
       </h2>
       <div id="accordion-flush-body-1" className="open" aria-labelledby="accordion-flush-heading-1">
         {/* Accordian Open */}
-        <div className="flex mt-4 ml-4 p-4 border border-gray-200 rounded dark:border-gray-700 w-full">
+        <div className="flex mt-6 ml-4 p-4 border border-gray-200 rounded dark:border-gray-700 w-full">
         <div>
           <div className="block mb-2 text-md font-medium text-gray-900 dark:text-white">
             Payout based on
@@ -75,13 +75,14 @@ return <div className="flex grid grid-cols-12">
         </div>
         <div className="ml-12 w-5/12">
       {payoutRadioButton === "Transaction" ? (
-        <div>
+        <div className="mt-1">
         <BasicInputField
               header="Payout % on Transaction"
               placeholder="% on Transaction amount"
               type="number"
               key="random1"
               value={payoutPercOnTxn}
+              onWheel={(e) => (e.target as HTMLElement).blur()}
               onChange={(e) => {
                 setPayoutPercOnTxn(parseFloat(e.target.value));
                 setPayoutAmount(parseFloat(e.target.value) * transactionAmount/100)
@@ -92,7 +93,7 @@ return <div className="flex grid grid-cols-12">
       </div>
       ) : payoutRadioButton === "PF" ? (
         <div>
-      <div className="flex mt-4">
+      <div className="flex mt-1">
       <div className="block text-sm font-medium text-gray-900 dark:text-white">
         PF Type
         </div>
@@ -112,6 +113,7 @@ return <div className="flex grid grid-cols-12">
           header="PF Percent %"
           placeholder="... pf percent"
           type="number"
+          onWheel={(e) => (e.target as HTMLElement).blur()}
           onChange={(e) => {
             setPfValue(parseFloat(e.target.value))
             setPayoutAmount((parseFloat(e.target.value)*transactionAmount/100)/100 * payoutPercOnPF)
@@ -126,6 +128,7 @@ return <div className="flex grid grid-cols-12">
           placeholder="% on PF amount"
           type="number"
           value={payoutPercOnPF}
+          onWheel={(e) => (e.target as HTMLElement).blur()}
           onChange={(e) => {
             setPayoutPercOnPF(parseFloat(e.target.value))
             setPayoutAmount(parseFloat(e.target.value)*(pfValue*transactionAmount/100)/100)
@@ -142,6 +145,7 @@ return <div className="flex grid grid-cols-12">
           header="PF Amount (in Rs.)"
           placeholder="... pf amount"
           type="number"
+          onWheel={(e) => (e.target as HTMLElement).blur()}
           onChange={(e) => {
             setPfValue(parseFloat(e.target.value))
             setPayoutAmount(parseFloat(e.target.value)/100 * payoutPercOnPF)
@@ -156,6 +160,7 @@ return <div className="flex grid grid-cols-12">
           placeholder="% on PF amount"
           type="number"
           value={payoutPercOnPF}
+          onWheel={(e) => (e.target as HTMLElement).blur()}
           onChange={(e) => {
             setPayoutPercOnPF(parseFloat(e.target.value))
             setPayoutAmount(parseFloat(e.target.value)*pfValue/100)
@@ -173,7 +178,7 @@ return <div className="flex grid grid-cols-12">
     </div>
     </div>
     {/* Extra Gain Toggle */}
-    <div className="mt-10 ml-4 p-4 border border-gray-200 rounded dark:border-gray-700 w-full">
+    <div className="mt-6 ml-4 p-4 border border-gray-200 rounded dark:border-gray-700 w-full">
       <ToggleField 
         header="Extra Gains from Lender?" 
         checked={extraGainToggle} 
@@ -205,6 +210,7 @@ return <div className="flex grid grid-cols-12">
               header="Insurance Amount"
               placeholder="Insurance amount provided"
               type="number"
+              onWheel={(e) => (e.target as HTMLElement).blur()}
               onChange={(e) => {
                 setFlatInsuranceAmount(parseFloat(e.target.value));
                 setTotalOtherGain(parseFloat(e.target.value) + adjustmentGain + extraEarningPFPerc)
@@ -221,6 +227,7 @@ return <div className="flex grid grid-cols-12">
               header="Insurance Amount"
               placeholder="Insurance amount provided"
               type="number"
+              onWheel={(e) => (e.target as HTMLElement).blur()}
               onChange={(e) => {
                 setPercInsuranceAmount(parseFloat(e.target.value));
                 setFinalInsuranceAmount(parseFloat(e.target.value)/100 * percInsuracePercentage)
@@ -235,6 +242,7 @@ return <div className="flex grid grid-cols-12">
               header="Insurance Payout %"
               placeholder="Insurance % of the amount"
               type="number"
+              onWheel={(e) => (e.target as HTMLElement).blur()}
               onChange={(e) => {
                 setPercInsurancePercentage(parseFloat(e.target.value));
                 setFinalInsuranceAmount(parseFloat(e.target.value) * percInsuranceAmount/100)
@@ -262,6 +270,7 @@ return <div className="flex grid grid-cols-12">
             header="Extra Earning PF %"
             placeholder="% of extra earned PF"
             type="number"
+            onWheel={(e) => (e.target as HTMLElement).blur()}
             onChange={(e) => {
               setExtraEarningPFPerc(parseFloat(e.target.value));
               setPayoutOnExtraEarningPF((parseFloat(e.target.value)/100 * transactionAmount) * saarathiShare/100)
@@ -276,6 +285,7 @@ return <div className="flex grid grid-cols-12">
             header="Saarathi Share(Ext Earning PF)"
             placeholder="saarathi's share percentage"
             type="number"
+            onWheel={(e) => (e.target as HTMLElement).blur()}
             onChange={(e) => {
               setSaarathiShare(parseFloat(e.target.value));
               setPayoutOnExtraEarningPF(parseFloat(e.target.value)/100 * (extraEarningPFPerc/100*transactionAmount))
@@ -292,6 +302,7 @@ return <div className="flex grid grid-cols-12">
             header="Adjustment(gain)"
             placeholder="any extra amount from lender?"
             type="number"
+            onWheel={(e) => (e.target as HTMLElement).blur()}
             onChange={(e) => {
               setAdjustmentGain(parseFloat(e.target.value));
               setTotalOtherGain(insuranceType === "Percent" ? parseFloat(e.target.value) + payoutOnExtraEarningPF + finalInsuranceAmount : parseFloat(e.target.value) + payoutOnExtraEarningPF + flatInsuranceAmount)
@@ -313,7 +324,7 @@ return <div className="flex grid grid-cols-12">
       ) : null}
     </div>
     </div>
-    <div className="mt-10 ml-4 p-4 border border-gray-200 rounded dark:border-gray-700 w-full">
+    <div className="mt-6 ml-4 p-4 border border-gray-200 rounded dark:border-gray-700 w-full">
       <ToggleField header="Deductions from Lender?" checked={deductionToggle} onChange={() => setDeductionToggle(!deductionToggle)}/>
     </div>
     <div className="ml-4 mt-8 p-4 border border-gray-200 rounded dark:border-gray-700 w-full">
@@ -396,6 +407,7 @@ return <div className="flex grid grid-cols-12">
               placeholder="final cp payout"
               type="number"
               value={cpNetPayoutAmount}
+              onWheel={(e) => (e.target as HTMLElement).blur()}
               onChange={(e) => {
                 setCpNetPayoutAmount(parseFloat(e.target.value));
               }}
@@ -411,7 +423,7 @@ return <div className="flex grid grid-cols-12">
     </div>
     </div>
   </div>
-  <div className="flex-1 col-span-5 max-h-screen sticky top-0 overflow-y-auto">
+  <div className="flex-1 col-span-4 max-h-screen sticky top-0 overflow-y-auto pl-3">
   <div className="flex flex-wrap mt-8">
         <div className="w-full">
           <ul
@@ -437,7 +449,7 @@ return <div className="flex grid grid-cols-12">
                 Details
               </a>
             </li>
-            <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+            {/* <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
               <a
                 className={
                   "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
@@ -455,7 +467,7 @@ return <div className="flex grid grid-cols-12">
               >
                  Information
               </a>
-            </li>
+            </li> */}
             <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
               <a
                 className={
@@ -476,30 +488,42 @@ return <div className="flex grid grid-cols-12">
               </a>
             </li>
           </ul>
-          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
+          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded pt-6">
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? "block" : "hidden"} id="link1">
-                <address className="relative bg-gray-100 dark:bg-gray-700 dark:border-gray-600 p-4 rounded-lg border border-gray-200 not-italic grid grid-cols-2">
-            <div className="space-y-2 text-gray-500 dark:text-gray-400 leading-loose hidden sm:block">
-                Loan File <br />
+                  <div className="flex justify-center block mb-2 text-xl font-medium text-gray-900 dark:text-white">
+                    LAF837502595820240516218652
+                  </div>
+                  <div className="flex justify-center block mb-2 text-md font-medium text-gray-900 dark:text-white">
+                  ₹ 10,00,000
+                  </div>
+                  <div className="flex justify-center block mb-2 text-sm font-small text-gray-900 dark:text-white">
+                    (Rupees Ten Lakh)
+                  </div>
+                <address className="pl-10 pr-10 mt-10 not-italic grid grid-cols-2">
+            <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400 leading-loose hidden sm:block">
                 Applicant <br />
                 Lender <br />
                 Channel <br />
                 Sales Manager <br />
                 Updated by <br />
-
+                Product Type <br />
+                Sub Product <br />
+                Loan Type <br />
             </div>
-            <div id="contact-details" className="space-y-2 text-gray-900 dark:text-white font-medium leading-loose">
-                LAF837502595882128269 <br />
+            <div id="contact-details" className="space-y-2 text-sm text-gray-900 dark:text-white font-medium leading-loose">
                 Custom steel traders <br />
                 Kotak Mahindra LTD.<br />
                 Money Care PVT.<br />
                 Rishi Gulathi <br />
                 Ravi Chaudhary <br />
+                Home Loan <br />
+                Construction <br />
+                BT + Top-up <br />
             </div>
         </address>
-                <address className="mt-2 relative bg-gray-100 dark:bg-gray-700 dark:border-gray-600 p-4 rounded-lg border border-gray-200 not-italic grid grid-cols-2">
+                {/* <address className="mt-2 relative bg-blue-100 dark:bg-gray-700 dark:border-gray-600 p-4 rounded-lg border border-gray-200 not-italic grid grid-cols-2">
             <div className="space-y-2 text-gray-500 dark:text-gray-400 leading-loose hidden sm:block">
                 Product Type <br />
                 Sub Product <br />
@@ -524,7 +548,7 @@ return <div className="flex grid grid-cols-12">
                 PDD Cleared <br />
                 27/Mar/24 <br />
             </div>
-        </address>
+        </address> */}
                 </div>
                 <div className={openTab === 2 ? "block" : "hidden"} id="link2">
                   <div className="flex justify-center">
