@@ -1,4 +1,4 @@
-import { ChangeEvent, WheelEvent } from "react"
+import { ChangeEvent } from "react"
 
 interface LabelledInputType {
     placeholder: string,
@@ -34,7 +34,6 @@ type SelectProps = {
     type: string,
     value?: number,
     key?: string,
-    onWheel?: (e: WheelEvent<HTMLDivElement>) => void,
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   }
 
@@ -64,18 +63,9 @@ type SelectProps = {
     onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
   }
 
-  type CardProps = {
-    header: string,
-    value: string, 
-    analatics: string,
-    color: string,
-    text: string,
-    arrow?: string
-  }
-
 export function LabelledInput({ placeholder, onchange, type } : LabelledInputType) {
     return <div>
-    <div className="relative">
+    <div className="relative mb-6">
   <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
     <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
         <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"/>
@@ -181,10 +171,10 @@ export function SelectInputField1({ header, value, disabled, className, options,
     
 }
 
-export function BasicInputField({ header, placeholder, type, value, key, onWheel, onChange }: BasicInputFieldProps) {
+export function BasicInputField({ header, placeholder, type, value, key, onChange }: BasicInputFieldProps) {
     return <div>
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{header}</label>
-        <input type= {type} onChange={onChange} value={value} key={key} id="first_name" onWheel={onWheel} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
+        <input type= {type} onChange={onChange} value={value} key={key} id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
             rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700
             dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 
             dark:focus:border-blue-500" placeholder={placeholder} required step="any"/>
@@ -205,7 +195,7 @@ export function ToggleField({ header, checked, onChange }: ToggleFieldProps) {
     return <div>
     <label className="inline-flex items-center cursor-pointer">
       <input type="checkbox" checked={checked} onChange={onChange} className="sr-only peer" />
-      <div className="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+      <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
       <span className="ms-3 text-md font-medium text-gray-900 dark:text-gray-300">{header}</span>
     </label>
     </div>
@@ -219,37 +209,7 @@ export function CheckBoxField({ header, onChange }:CheckBoxProps) {
 }
 
 export function ButtonType({ header, onClick }:ButtonProps) {
-    return <button type="button" onClick={onClick} className="w-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+    return <button type="button" onClick={onClick} className="w-10/12 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
         {header}
         </button>
-}
-
-export const Card = ({ header, value, analatics, color, text, arrow }:CardProps) =>{
-    return <div>
-    <div className="block p-4 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
-        <div className="border-l-4 border-blue-700 pl-4 ml-0.5">
-            <div className="text-sm text-gray-400 dark:text-gray-400">
-                {header}
-            </div>
-            <div className="font-bold text-lg text-black">
-                {value}
-            </div>
-        </div>
-        <div className="flex mt-2">
-        <div className={"flex font-semibold text-sm " + color}>
-        <div>
-            <span style={{ fontSize: '18px', fontWeight: '900'}}>
-                {arrow}
-            </span>
-        </div>
-        <div className="ml-1">
-            {analatics}
-        </div>
-        </div>
-        <div className="text-sm text-gray-400 dark:text-gray-400 ml-2">
-            {text}
-        </div>
-        </div>
-    </div>
-    </div>
 }
