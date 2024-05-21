@@ -23,7 +23,7 @@ export const BarGraph = () => {
 
     const options: any = {
         responsive: true,
-        indexAxis: 'x',
+        indexAxis: 'y',
         barThickness: 20,
         plugins: {
             legend: {
