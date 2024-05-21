@@ -18,17 +18,17 @@ export const PieGraph = () => {
     const options: any = {
         responsive: true,
         cutout: "70%",
-        radius: "59%",
+        radius: "90%",
         plugins: {
             doughnutLabel: [],
             legend: {
                 display: true,
-                position: "top",
+                position: "bottom",
                 labels: {
-                    boxWidth: 10,
+                    boxWidth: 20,
                     usePointStyle: true,
                     pointStyle: "circle",
-                    padding: 30
+                    padding: 20
                 }
             }
         }
@@ -40,10 +40,12 @@ export const PieGraph = () => {
             const { ctx, data } = chart;
 
             ctx.save();
-            ctx.font = 'bolder 30px sans-serif'
-            ctx.fillStyle = 'red'
+            ctx.font = 'bold 20px sans-serif'
+            ctx.fillStyle = 'grey'
             ctx.textAlign = 'center'
-            ctx.fillText('90%', chart.getDatasetMeta(0).data[0].x, chart.getDatasetMeta(0).data[0].y)
+            // ctx.width = 1
+            // ctx.height = 1
+            ctx.fillText(`236K`, chart.getDatasetMeta(0).data[0].x, chart.getDatasetMeta(0).data[0].y)
         }
     }
 

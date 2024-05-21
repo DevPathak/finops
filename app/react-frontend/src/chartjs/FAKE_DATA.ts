@@ -1,5 +1,7 @@
+
 export const lineChartData = {
     labels: [
+        "",
         "November",
         "December",
         "January",
@@ -9,24 +11,31 @@ export const lineChartData = {
     ],
     datasets: [
         {
-            label: "Retention",
-            data: [3000, 5000, 4500, 6000, 8000, 7000, 9000],
-            borderColor: 'rgba(0, 71, 171, 0.5)'
+            label: "Login",
+            data: [0, 5900, 6900, 8700, 9500, 9700, 9900],
+            borderColor: 'rgba(0, 71, 171, 1)'
+        },
+        {
+            label: "PDD",
+            data: [0, 4000, 4500, 5300, 5600, 7900, 9000],
+            borderColor: 'rgba(60, 184, 51, 1)'
         }
     ]
 }
 
 export const barChartData: any = {
     labels: [
-        "Calculation Pending",
-        "Calculation Done",
-        "Invoice Accepted",
-        "Payment Released"
+        "December",
+        "January",
+        "Februrary",
+        "March",
+        "April",
+        "May"
     ],
     datasets: [{
       axis: 'y',
-      label: 'Pending Payments',
-      data: [356, 238, 221, 138],
+      label: 'LOGIN',
+      data: [7600, 7200, 9500, 10200, 10500, 3000],
       fill: false,
       backgroundColor: [
         'rgba(0, 71, 171, 0.6)',
@@ -37,22 +46,36 @@ export const barChartData: any = {
         'rgba(0, 71, 171, 0.9)'
       ],
       borderWidth: 1
-    }]
+    },
+    {
+        axis: 'y',
+        label: 'PDD',
+        data: [3600, 4200, 4500, 7000, 9000, 2000],
+        fill: false,
+        backgroundColor: [
+          'rgba(60, 184, 51, 0.6)',
+          'rgba(60, 184, 51, 0.6)'
+        ],
+        borderColor: [
+          'rgba(24, 122, 17, 0.9)',
+          'rgba(24, 122, 17, 0.9)'
+        ],
+        borderWidth: 1
+      }]
 }
 
 export const pieChartData = {
-    labels: [ "Invoice", "Pending", "Payment", "Retention"],
+    labels: [ "Invoice : 523", "Payment : 426", "Retention : $236K"],
     datasets: [
         {
-            label: "Time Spent",
-            data: [120, 60, 30, 90],
+            label: "Amount",
+            data: [44, 39, 23],
             backgroundColor: [
-                "rgba(255, 99, 132, 0.9)",
-                "rgba(54, 162, 235, 0.9)",
-                "rgba(255, 206, 86, 0.9)",
-                "rgba(75, 192, 192, 0.9)"
+                "rgba(31, 32, 54, 1)",
+                "rgba(111, 104, 227, 1)",
+                "rgba(197, 198, 201, 1)"
             ],
-            hoverOffset: 4
+            hoverOffset: 25
         }
     ]
 }
